@@ -9,60 +9,6 @@ public class PEMService {
     private Scanner in = new Scanner(System.in);
     private int choice;
 
-    public void showMenu() {
-        try {
-            categoryLoad();
-            expenceLoad();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("No data loaded.");
-        }
-
-        while (true) {
-            printMenu();
-            switch (choice) {
-                case 1:
-                    onAddCategory();
-                    pressAnyKeyToContinue();
-                    break;
-                case 2:
-                    onCategoryList();
-                    pressAnyKeyToContinue();
-                    break;
-                case 3:
-                    onExpenceEntry();
-                    pressAnyKeyToContinue();
-                    break;
-                case 4:
-                    onExpenceList();
-                    pressAnyKeyToContinue();
-                    break;
-                case 5:
-                    onMonthlyExpenceList();
-                    pressAnyKeyToContinue();
-                    break;
-                case 6:
-                    onYearlyExpenceList();
-                    pressAnyKeyToContinue();
-                    break;
-                case 7:
-                    onCategorizedExpenceList();
-                    pressAnyKeyToContinue();
-                    break;
-                case 8:
-                    onExpenceDelete();
-                    pressAnyKeyToContinue();
-                    break;
-                case 9:
-                    onCategoryDelete();
-                    pressAnyKeyToContinue();
-                    break;
-                case 0:
-                    onExit();
-                    break;
-            }
-        }
-    }
-
     private void onCategorizedExpenceList() {
         System.out.println("Categorized expence list");
         Map<String, Double> resultMap = reportService.calculateCategorysTotal();
@@ -131,13 +77,13 @@ public class PEMService {
             System.out.println("Expence " + repo.expenceList.get(nr - 1).getRemark() + " will be removed.");
             repo.expenceList.remove(nr - 1);
         } else {
-            System.out.println("No such expence.");
+            System.out.println("No such expense.");
         }
     }
 
 
     private void onExpenceEntry() {
-        System.out.println("Please input expence details...");
+        System.out.println("Please input expense details...");
         onCategoryList();
 
         System.out.print("Choose category ");
@@ -147,7 +93,7 @@ public class PEMService {
 
         System.out.print("Please enter the amount: ");
         Double amount = in.nextDouble();
-        System.out.print("Please enter the remark: ");
+        System.out.print("Please write description: ");
         in.nextLine();
         String remark = in.nextLine();
 
@@ -163,7 +109,7 @@ public class PEMService {
         expence.setDate(date);
         //Store expence
         repo.expenceList.add(expence);
-        System.out.println("Your expence added.");
+        System.out.println("Your expense added.");
     }
 
     private void onCategoryList() {
@@ -184,16 +130,16 @@ public class PEMService {
         System.out.println("Category created.");
     }
 
-    public void printMenu() {
+    private void printMenu() {
         System.out.println("------------Menu-----------");
         System.out.println("1. Add category");
         System.out.println("2. Category list");
-        System.out.println("3. Expence entry");
-        System.out.println("4. Expence list");
-        System.out.println("5. Monthly expence list");
-        System.out.println("6. Yearly expence list");
-        System.out.println("7. Categorized expence list");
-        System.out.println("8. Delete expence by nr");
+        System.out.println("3. Expense entry");
+        System.out.println("4. Expense list");
+        System.out.println("5. Monthly expense list");
+        System.out.println("6. Yearly expense list");
+        System.out.println("7. Categorized expense list");
+        System.out.println("8. Delete expense by nr");
         System.out.println("9. Delete category by nr");
         System.out.println("0. Exit");
         System.out.println("---------------------------");
@@ -201,39 +147,7 @@ public class PEMService {
         choice = in.nextInt();
     }
 
-    public void categorySave() throws IOException {
-        FileOutputStream fos = new FileOutputStream("Categorys.db");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(repo.categoryList);
-        oos.close();
-    }
-
-    public void categoryLoad() throws IOException {
-        FileInputStream fis = new FileInputStream("Categorys.db");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        try {
-            repo.setCategoryList((List<Category>) ois.readObject());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        ois.close();
-    }
-
-    public void expenceSave() throws IOException {
-        FileOutputStream fos = new FileOutputStream("Expence.db");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(repo.expenceList);
-        oos.close();
-    }
-
-    public void expenceLoad() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream("Expence.db");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        repo.setExpenceList((List<Expence>) ois.readObject());
-        ois.close();
-    }
-
-    public void pressAnyKeyToContinue() {
+    private void pressAnyKeyToContinue() {
         System.out.println("Press enter to continue...");
         try {
             System.in.read();
@@ -244,14 +158,65 @@ public class PEMService {
 
     private void onExit() {
         try {
-            //save("failas");
-            categorySave();
-            expenceSave();
+            repo.categorySave();
+            repo.expenceSave();
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.exit(0);
     }
 
+    public void showMenu() {
+        try {
+            repo.categoryLoad();
+            repo.expenceLoad();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No data loaded.");
+        }
 
+        while (true) {
+            printMenu();
+            switch (choice) {
+                case 1:
+                    onAddCategory();
+                    pressAnyKeyToContinue();
+                    break;
+                case 2:
+                    onCategoryList();
+                    pressAnyKeyToContinue();
+                    break;
+                case 3:
+                    onExpenceEntry();
+                    pressAnyKeyToContinue();
+                    break;
+                case 4:
+                    onExpenceList();
+                    pressAnyKeyToContinue();
+                    break;
+                case 5:
+                    onMonthlyExpenceList();
+                    pressAnyKeyToContinue();
+                    break;
+                case 6:
+                    onYearlyExpenceList();
+                    pressAnyKeyToContinue();
+                    break;
+                case 7:
+                    onCategorizedExpenceList();
+                    pressAnyKeyToContinue();
+                    break;
+                case 8:
+                    onExpenceDelete();
+                    pressAnyKeyToContinue();
+                    break;
+                case 9:
+                    onCategoryDelete();
+                    pressAnyKeyToContinue();
+                    break;
+                case 0:
+                    onExit();
+                    break;
+            }
+        }
+    }
 }

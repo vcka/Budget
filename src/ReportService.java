@@ -3,7 +3,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ReportService {
-    Repository repo = Repository.getRepository();
+    private Repository repo = Repository.getRepository();
 
     public Map<String, Double>  calculateMonthlyTotal(){
         Map<String, Double> m = new TreeMap<>();

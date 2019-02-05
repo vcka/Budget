@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +23,37 @@ public class Repository {
 
     public void setExpenceList(List<Expence> expenceList) {
         this.expenceList = expenceList;
+    }
+
+    public void categorySave() throws IOException {
+        FileOutputStream fos = new FileOutputStream("Categorys.db");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(categoryList);
+        oos.close();
+    }
+
+    public void categoryLoad() throws IOException {
+        FileInputStream fis = new FileInputStream("Categorys.db");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        try {
+            setCategoryList((List<Category>) ois.readObject());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        ois.close();
+    }
+
+    public void expenceSave() throws IOException {
+        FileOutputStream fos = new FileOutputStream("Expence.db");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(expenceList);
+        oos.close();
+    }
+
+    public void expenceLoad() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream("Expence.db");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        setExpenceList((List<Expence>) ois.readObject());
+        ois.close();
     }
 }
